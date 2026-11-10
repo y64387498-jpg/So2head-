@@ -1,0 +1,83 @@
+
+name: S2 Head Control APK Builder
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Create Web Project
+        run: |
+          mkdir -p www
+          cp index.html style.css script.js www/
+
+      - name: Create Package
+        run: |
+          cat > package.json <<'EOF'
+          {
+            "name": "s2-head-control",
+            "version": "1.0.0",
+            "private": true,
+            "scripts": {
+              "build": "echo Web project ready"
+            },
+            "dependencies": {
+              "@capacitor/core": "^7.0.0",
+              "@capacitor/android": "^7.0.0"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "^7.0.0"
+            }
+          }
+          EOF
+          npm install
+
+      - name: Initialize Capacitor
+        run: |
+          npx cap init "S2 Head Control" com.s2.headcontrol --web-dir=www
+
+      - name: Add Android Platform
+        run: npx cap add android
+
+      - name: Sync Android Project
+        run: npx cap sync android
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: S2-HEAD-CONTROL-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
