@@ -1,5 +1,5 @@
 
-name: S2 Head Control APK Builder
+name: SO2HEAD APK BUILDER
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Android APK
+    name: SO2HEAD Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -30,10 +30,19 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Configure Android SDK
+        run: |
+          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          echo "/usr/local/lib/android/sdk/platform-tools" >> $GITHUB_PATH
+          echo "/usr/local/lib/android/sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-      - name: Create Web Project
+      - name: Install Android SDK Packages
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Prepare Web Files
         run: |
           mkdir -p www
           cp index.html style.css script.js www/
@@ -42,11 +51,11 @@ jobs:
         run: |
           cat > package.json <<'EOF'
           {
-            "name": "s2-head-control",
+            "name": "so2head",
             "version": "1.0.0",
             "private": true,
             "scripts": {
-              "build": "echo Web project ready"
+              "build": "echo SO2HEAD ready"
             },
             "dependencies": {
               "@capacitor/core": "^7.0.0",
@@ -61,12 +70,12 @@ jobs:
 
       - name: Initialize Capacitor
         run: |
-          npx cap init "S2 Head Control" com.s2.headcontrol --web-dir=www
+          npx cap init SO2HEAD com.so2head.app --web-dir=www
 
-      - name: Add Android Platform
+      - name: Add Android
         run: npx cap add android
 
-      - name: Sync Android Project
+      - name: Sync Android
         run: npx cap sync android
 
       - name: Build APK
@@ -75,10 +84,10 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload SO2HEAD APK
         uses: actions/upload-artifact@v4
         with:
-          name: S2-HEAD-CONTROL-APK
+          name: SO2HEAD-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
