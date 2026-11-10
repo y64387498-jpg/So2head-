@@ -1,0 +1,23 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#252525;color:#fff;font-family:Arial,sans-serif;min-height:100vh}
+.app{width:100%;max-width:430px;min-height:100vh;margin:auto;padding:24px;display:flex;flex-direction:column}
+header{height:55px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #414141}
+.brand{font-size:20px;font-weight:900;letter-spacing:2px}
+.brand span{font-size:12px;color:#aaa}
+.version{font-size:11px;color:#888}
+main{flex:1;display:flex;flex-direction:column;align-items:center}
+.preview-title{margin-top:30px;font-size:12px;letter-spacing:3px;color:#aaa}
+.character{width:270px;height:355px;margin-top:10px;display:flex;align-items:center;justify-content:center}
+#soldier{width:100%;height:100%;overflow:visible}
+#head{transform-box:fill-box;transform-origin:center bottom;transition:transform .12s ease}
+.panel{width:100%;background:#323232;border:1px solid #494949;border-radius:12px;padding:22px;margin-top:10px}
+.panel-heading{display:flex;justify-content:space-between;font-size:13px;font-weight:bold;letter-spacing:1px;margin-bottom:25px}
+#sizeValue{color:#d5d5d5}
+input[type=range]{width:100%;accent-color:#fff;height:5px}
+.range-labels{display:flex;justify-content:space-between;margin-top:15px;font-size:9px;color:#999;letter-spacing:1px}
+#startButton{width:100%;height:56px;margin-top:25px;border:0;border-radius:9px;background:#eee;color:#252525;font-size:15px;font-weight:900;letter-spacing:2px}
+#startButton:active{transform:scale(.97)}
+#status{font-size:11px;color:#9cdaa9;margin-top:20px;letter-spacing:1px}
+footer{background:#202020;border-radius:8px;padding:17px;text-align:center;color:#888;font-size:10px;letter-spacing:1px;margin-top:25px}
+footer span{color:#fff}
+@media(max-height:700px){.character{height:270px}}
